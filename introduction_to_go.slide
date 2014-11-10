@@ -1,0 +1,229 @@
+Introduction to Go
+GDG Korea DevFair 2014
+
+장재휴
+Developer, Purpleworks
+jaehue@jang.io
+
+* Agenda
+
+- Feature of Go
+- OOP in Go
+- Concurrency in Go
+- Real world Go
+
+* Feature of Go
+
+* Why Go?
+
+- Statically typed languages: Efficient / Hard to write
+- Dynamic language: Easy to use / Slow, error-prone
+- Concurrent programming is hard(thread, lock, mutex)
+- Trade off: Speed, Safety, Ease to use
+ 
+* What is Go?
+
+- open source
+- concurrent
+- garbage-collected
+- efficient
+- scalable
+- simple
+- fun
+- boring (to some)
+
+* Who uses?
+
+.image introduction_to_go/go_user.png 480 640
+
+* Principles of Go
+
+- Simple
+- Orthogonal
+- Succinct
+- Safe
+
+Go is statically typed and compiled but in many ways feels as lightweight and dynamic languages
+
+* Important stuff
+
+- Object oriented without class and inheritance
+- Syntax sugar declaration
+- Strong and Static types
+- Interfaces, but no declaration (duck typing)
+- Functions and Methods (with receivers)
+- No exceptions (error interface)
+- Visibility with the first letter of symbol
+- Unused imports and variables occurs compile error
+- Excellent and complete standard library
+
+* Go is
+
+- Fast
+- Friendly
+- Concurrent
+
+* OOP in Go
+
+* What is "Object Oriented" (wikipedia)
+
+- A language is usually considered *object-based* if it *includes* *the* *basic* *capabilities* *for* *an* *object*: identity, properties, and attributes 
+
+- A language is considered *object-oriented* if it *is* *object-based* and also *has* *the* *capability* *of* *polymorphism* *and* *inheritance*
+
+* Does Go Have Objects?
+
+- Go lacks Classes
+- Go lacks "Objects"
+
+* Is Go Object-based Language?
+
+* What is an "Object" (wikipedia)
+
+-  An object is an abstract data type that has *state(data)* and *behavior(code)*
+
+* Object in Go
+
+.play introduction_to_go/object1.go
+
+* Object in Go
+
+.play introduction_to_go/object2.go
+
+* Is Go Object-oriented Language?
+
+* What is "Inheritance" (wikipedia)
+
+- Provides reuse of existing objects
+- Classes are created in hierarchies
+- Inheritance passes *knowledge* down!
+
+* Go's approach
+
+- Go explicitly avoided inheritance
+- Go strictly follows the *Composition* *over* *inheritance* principle
+# or Composite Reuse Principle
+
+* What is Composition
+- Provides reuse of Objects
+- One object is declared by including other objects
+- Composition pulls *knowledge* into another
+
+* Composition in Go
+.code introduction_to_go/composition.go
+
+* What is "Polymorphism" (wikipedia)
+- The provision of a single interface to entities of different types
+- Via Generics, Overloading and/or Subtyping
+
+* Go’s approach
+- Go avoided subtyping & overloading
+- Go does not provide Generics
+- Polymorphism via interfaces
+
+* Interfaces in Go
+- Interfaces are just sets of methods
+- Interfaces define behavior
+- "If something can do this, then it can be used here"
+
+* Interfaces in Go
+.code introduction_to_go/interface.go
+
+Interfaces are satisfied implicitly
+A type satisfies an interface simply by 
+implementing its methods. There is no "implements" declaration; interfaces are satisfied implicitly
+=> orthogonality
+
+[interface 예시]
+
+The Gang of Four Design Patterns book discusses at length replacing implementation inheritance (extends) with interface inheritance (implements).
+
+* Go Interfaces are based on implementation, not declaration
+The Gang of Four Design Patterns book discusses at length replacing implementation inheritance (extends) with interface inheritance (implements).
+I once attended a Java user group meeting where James Gosling (Java’s inventor) was the featured speaker. During the memorable Q&A session, someone asked him: “If you could do Java over again, what would you change?” “I’d leave out classes,” he replied. After the laughter died down, he explained that the real problem wasn’t classes per se, but rather implementation inheritance (the extends relationship). Interface inheritance (the implements relationship) is preferable. You should avoid implementation inheritance whenever possible.
+
+* Go is simple!
+
+_Simple_can_be_harder_than_complex_:_You_have_to_work_hard_to_get_your_thinking_clean_to_make_it_simple_. _But_it's_worth_it_in_the_end_because_once_you_get_there_, _you_can_move_mountains_.
+ - _Steve_Jobs_ -
+
+* Concurrency in Go
+
+* What is concurrency(병행성 or 동시성)?
+- Concurrency is a property of systems in which several computations are executing simultaneously
+- Concurrency is the composition of independently executing processes.(http://blog.golang.org/concurrency-is-not-parallelism)
+- It is not parallelism.
+
+* Go's Concurrency is:
+- Easy to understand.
+- Easy to use.
+- Easy to reason about.
+- You don't need to be an expert!
+
+* Go's approach
+
+- In UNIX: processes connected by pipes:
+ find ~/go/src | grep _test.go$ | xargs wc -l
+- In Go: goroutines connected by channels
+
+Share data by *Communicating*! (not by sharing memory)
+
+* Fundamentals #1 - goroutines
+
+- Independently executing function(not thread)
+- Very lightweight processes
+- Start a new goroutine with the go keyword
+
+.code introduction_to_go/go.go
+
+* Fundamentals #2 - Channel-based communication
+
+- Channels are a typed conduit for Synchronization & Communication
+- The right way for goroutines to talk to each other
+- The channel operator `<-` is used to send and receive values:
+
+.code introduction_to_go/channel.go
+
+* Quick syntax review of Channel
+
+- Makes an unbuffered channel of bools
+ c := make(chan bool)
+- Sends a value on the channel
+ c <- x
+- Waits to receive a value on the channel
+ <- c
+- Waits to receive a value and stores it inx
+ x = <- c
+- Waits to receive a value. ok will be false if channel is closed and empty
+ x, ok = <- c
+
+* synchronization
+.code introduction_to_go/synchronization.go
+
+* communication
+.code introduction_to_go/communication.go
+
+* Philosophy
+- Goroutines give the efficiency of an asynchronous model, but you can write code in a synchronous style.
+- Easier to reason about: write goroutines that do their specific jobs well, and connect them with channels.
+ In practice, this yields simpler and more maintainable code.
+- Think about the concurrency issues that matter: 
+ "Don’t communicate by sharing memory. Instead, share memory by communicating."
+
+* Example: unique ID service
+.code introduction_to_go/uniqueId.go
+
+* Example: memory recycler
+.code introduction_to_go/memoryRecycler.go
+
+* Example: Timeout
+.code introduction_to_go/timeout.go
+
+* Example: Heartbeat
+.code introduction_to_go/heartbeat.go
+
+* Example: network multiplexor
+.code introduction_to_go/networkMultiplexor.go
+
+* Example: first of N
+.code introduction_to_go/firstN.go
