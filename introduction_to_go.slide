@@ -20,8 +20,18 @@ jaehue@jang.io
 - Dynamic language: Easy to use / Slow, error-prone
 - Concurrent programming is hard(thread, lock, mutex)
 - Trade off: Speed, Safety, Ease to use
- 
-* What is Go?
+
+So, We need:
+
+- Efficiency
+- Safety
+- Concurrency
+- Scalability
+- Fast development cycle
+- No surprises
+- A cute mascot
+
+* What is go
 
 - open source
 - concurrent
@@ -31,6 +41,13 @@ jaehue@jang.io
 - simple
 - fun
 - boring (to some)
+
+* Design of Go
+
+- Lightweight, avoids unnecessary repetition
+- Object Oriented, but not in the usual way
+- Concurrent, in a way that keeps you sane
+- Designed for working programmers
 
 * Who uses?
 
@@ -88,7 +105,7 @@ Go is statically typed and compiled but in many ways feels as lightweight and dy
 
 * Object in Go
 
-.play introduction_to_go/object2.go
+.play introduction_to_go/object2.go /START OMIT/,/END OMIT/
 
 * Is Go Object-oriented Language?
 
@@ -110,11 +127,14 @@ Go is statically typed and compiled but in many ways feels as lightweight and dy
 - Composition pulls *knowledge* into another
 
 * Composition in Go
-.code introduction_to_go/composition.go
+.play introduction_to_go/composition1.go /START OMIT/,/END OMIT/
+
+* Composition in Go
+.play introduction_to_go/composition2.go /START OMIT/,/END OMIT/
 
 * What is "Polymorphism" (wikipedia)
 - The provision of a single interface to entities of different types
-- Via Generics, Overloading and/or Subtyping
+- Via *Generics*, *Overloading* and/or *Subtyping*
 
 * Go’s approach
 - Go avoided subtyping & overloading
@@ -127,20 +147,43 @@ Go is statically typed and compiled but in many ways feels as lightweight and dy
 - "If something can do this, then it can be used here"
 
 * Interfaces in Go
-.code introduction_to_go/interface.go
+.play introduction_to_go/interface.go /START OMIT/,/END OMIT/
 
-Interfaces are satisfied implicitly
-A type satisfies an interface simply by 
-implementing its methods. There is no "implements" declaration; interfaces are satisfied implicitly
-=> orthogonality
+* The Power of Interfaces
 
-[interface 예시]
+Writer interface in standard *"io"* package
 
-The Gang of Four Design Patterns book discusses at length replacing implementation inheritance (extends) with interface inheritance (implements).
+ // http://godoc.org/io#Writer
+ type Writer interface {
+     Write(p []byte) (n int, err os.Error)
+ }
 
-* Go Interfaces are based on implementation, not declaration
-The Gang of Four Design Patterns book discusses at length replacing implementation inheritance (extends) with interface inheritance (implements).
-I once attended a Java user group meeting where James Gosling (Java’s inventor) was the featured speaker. During the memorable Q&A session, someone asked him: “If you could do Java over again, what would you change?” “I’d leave out classes,” he replied. After the laughter died down, he explained that the real problem wasn’t classes per se, but rather implementation inheritance (the extends relationship). Interface inheritance (the implements relationship) is preferable. You should avoid implementation inheritance whenever possible.
+- Write writes up to len(p) bytes into p
+- Returns the # of bytes written & any error
+- Does not dictate how Write() is implemented
+- Used by fmt.Fprint, os.File, bytes.Buffer, net.Conn, http.Response.Body, etc.
+
+* The Power of Interfaces
+
+In handle function, just write to *io.Writer* object
+
+ func handle(w io.Writer, msg string) {
+     fmt.Fprintln(w, msg)
+ }
+
+The *os.Stdout* define Write function. It can be used for *io.Writer*.
+
+.play introduction_to_go/interface2.go /START OMIT/,/END OMIT/
+
+* The Power of Interfaces
+
+The *http.ResponseWriter* define Write function too. It can be used for *io.Writer*.
+The *io* package doesn’t know *http*. It just works.
+
+.play introduction_to_go/interface3.go /START OMIT/,/END OMIT/
+
+.link http://localhost:4000/hello-world localhost:4000/hello-world
+.link http://localhost:4000/this-is-an-example-of-io.Writer localhost:4000/this-is-an-example-of-io.Writer
 
 * Go is simple!
 
@@ -149,7 +192,7 @@ _Simple_can_be_harder_than_complex_:_You_have_to_work_hard_to_get_your_thinking_
 
 * Concurrency in Go
 
-* What is concurrency(병행성 or 동시성)?
+* What is concurrency
 - Concurrency is a property of systems in which several computations are executing simultaneously
 - Concurrency is the composition of independently executing processes.(http://blog.golang.org/concurrency-is-not-parallelism)
 - It is not parallelism.
@@ -164,44 +207,56 @@ _Simple_can_be_harder_than_complex_:_You_have_to_work_hard_to_get_your_thinking_
 
 - In UNIX: processes connected by pipes:
  find ~/go/src | grep _test.go$ | xargs wc -l
-- In Go: goroutines connected by channels
+- In Go: *goroutines* connected by *channels*
 
 Share data by *Communicating*! (not by sharing memory)
 
-* Fundamentals #1 - goroutines
+* Fundamentals #1 - Goroutine
 
-- Independently executing function(not thread)
+Goroutines are *independently* *executing* *functions* in the same address space.
+
+- The go statement launches a function call as a goroutine
+
+ go f()
+ go f(x, y, ...)
+
 - Very lightweight processes
-- Start a new goroutine with the go keyword
+- A goroutine runs concurrently (but not necessarily in parallel)
+- A goroutine has its own stack
 
-.code introduction_to_go/go.go
+* A simple example
+
+.play introduction_to_go/goroutine.go /START OMIT/,/END OMIT/
 
 * Fundamentals #2 - Channel-based communication
 
-- Channels are a typed conduit for Synchronization & Communication
-- The right way for goroutines to talk to each other
-- The channel operator `<-` is used to send and receive values:
+Channels are typed values that *allow* *goroutines* *to* *synchronize* *and* *exchange* *information*.
 
-.code introduction_to_go/channel.go
+- A channel type specifies a channel value type (and a communication direction):
 
-* Quick syntax review of Channel
+ chan int
+ chan<- string  // send-only channel
+ <-chan T       // receive-only channel
 
-- Makes an unbuffered channel of bools
- c := make(chan bool)
-- Sends a value on the channel
- c <- x
-- Waits to receive a value on the channel
- <- c
-- Waits to receive a value and stores it inx
- x = <- c
-- Waits to receive a value. ok will be false if channel is closed and empty
- x, ok = <- c
+- A channel is a variable of channel type:
 
-* synchronization
-.code introduction_to_go/synchronization.go
+ var ch chan int
+ ch := make(chan int)  // declare and initialize with newly made channel
 
-* communication
-.code introduction_to_go/communication.go
+- A channel permits sending and receiving values:
+
+ ch <- 1   // send value 1 on channel ch
+ x = <-ch  // receive a value from channel ch (and assign to x)
+
+- Channel operations synchronize the communicating goroutines.
+
+* Communicating goroutines
+
+.play introduction_to_go/channel.go /START OMIT/,/END OMIT/
+
+* Communicating goroutines
+
+.play introduction_to_go/pingpong.go /START OMIT/,/END OMIT/
 
 * Philosophy
 - Goroutines give the efficiency of an asynchronous model, but you can write code in a synchronous style.
@@ -209,6 +264,11 @@ Share data by *Communicating*! (not by sharing memory)
  In practice, this yields simpler and more maintainable code.
 - Think about the concurrency issues that matter: 
  "Don’t communicate by sharing memory. Instead, share memory by communicating."
+
+* Real world Go
+
+
+
 
 * Example: unique ID service
 .code introduction_to_go/uniqueId.go

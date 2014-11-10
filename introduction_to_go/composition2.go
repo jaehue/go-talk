@@ -13,16 +13,16 @@ type Person struct {
 	Address
 }
 
+// START OMIT
 // Declaring a Method
 func (a *Address) String() string {
 	return a.Number + " " + a.Street + "\n" + a.City + ", " + a.State + " " + "\n"
 }
 
 func (p *Person) String() string {
-	return p.Name + "\n" + p.Address.String()
+	return p.Name + "\n" + p.Address.String() // HL
 }
 
-// Declare using Composite Literal
 func main() {
 	p := Person{
 		Name:    "Steve",
@@ -31,3 +31,5 @@ func main() {
 	fmt.Println(p.String())
 	fmt.Println(p.Address.String())
 }
+
+// END OMIT

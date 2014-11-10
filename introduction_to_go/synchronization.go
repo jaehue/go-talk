@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 func main() {
 	done := make(chan bool)
 	doSort := func(s []int) {

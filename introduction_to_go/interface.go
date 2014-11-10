@@ -2,27 +2,7 @@ package main
 
 import "fmt"
 
-// Interface Declaration (Struct)
-type Shaper interface {
-	Area() int
-}
-
-// Using Interface as Param Type
-func Describe(s Shaper) {
-	fmt.Println("Area is:", s.Area())
-}
-
-// In Action
-func main() {
-	r := Rect{width: 10, height: 5}
-	x := Rect{width: 7, height: 10}
-	rs := Rects{r, x}
-	Describe(r)
-	Describe(x)
-	Describe(rs)
-}
-
-// Type Declaration (Struct)
+// Type Declaration
 type Rect struct {
 	width  int
 	height int
@@ -41,3 +21,27 @@ func (rs Rects) Area() int {
 	}
 	return a
 }
+
+// START OMIT
+// Interface Declaration (Struct)
+type Shaper interface {
+	Area() int // HL
+}
+
+// Using Interface as Param Type
+func Describe(s Shaper) {
+	fmt.Println("Area is:", s.Area())
+}
+
+// In Action
+func main() {
+	r := Rect{width: 10, height: 5}
+	x := Rect{width: 7, height: 10}
+	rs := Rects{r, x}
+
+	Describe(r)  // HL
+	Describe(x)  // HL
+	Describe(rs) // HL
+}
+
+// END OMIT

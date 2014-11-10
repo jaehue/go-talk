@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+// START OMIT
 // Type Declaration (Struct)
 type Rect struct {
 	width  int
@@ -18,3 +19,5 @@ func main() {
 	r := Rect{width: 10, height: 5}
 	fmt.Println("area: ", r.Area())
 }
+
+// END OMIT

@@ -3,10 +3,22 @@ package main
 import "fmt"
 
 // Type Declaration (Struct)
-type Rects []Rect
+type Rect struct {
+	width  int
+	height int
+}
 
 // Declaring a Method
-func (rs Rects) Area() int {
+func (r *Rect) Area() int {
+	return r.width * r.height
+}
+
+// START OMIT
+// Type Declaration (built-in type)
+type Rects []Rect // HL
+
+// Declaring a Method
+func (rs Rects) Area() int { // HL
 	var a int
 	for _, r := range rs {
 		a += r.Area()
@@ -24,13 +36,4 @@ func main() {
 	fmt.Println("total area: ", rs.Area())
 }
 
-// Type Declaration (Struct)
-type Rect struct {
-	width  int
-	height int
-}
-
-// Declaring a Method
-func (r *Rect) Area() int {
-	return r.width * r.height
-}
+// END OMIT
