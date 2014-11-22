@@ -12,6 +12,8 @@ jaehue@jang.io
 - Concurrency in Go
 - Real world Go
 
+.image introduction_to_go/go-logo.jpg
+
 * Feature of Go
 
 * Why Go?
@@ -21,64 +23,26 @@ jaehue@jang.io
 - Concurrent programming is hard(thread, lock, mutex)
 - Trade off: Speed, Safety, Ease to use
 
-So, We need:
-
-- Efficiency
-- Safety
-- Concurrency
-- Scalability
-- Fast development cycle
-- No surprises
-- A cute mascot
-
 * What is go
 
+- A modern, general purpose language.
 - open source
-- concurrent
+- Statically typed languages
+- Feel dynamically
+- concurrents
 - garbage-collected
 - efficient
-- scalable
-- simple
+- simply
 - fun
-- boring (to some)
-
-* Design of Go
-
-- Lightweight, avoids unnecessary repetition
-- Object Oriented, but not in the usual way
-- Concurrent, in a way that keeps you sane
-- Designed for working programmers
-
-* Who uses?
-
-.image introduction_to_go/go_user.png 480 640
-
-* Principles of Go
-
-- Simple
-- Orthogonal
-- Succinct
-- Safe
-
-Go is statically typed and compiled but in many ways feels as lightweight and dynamic languages
 
 * Important stuff
 
-- Object oriented without class and inheritance
-- Syntax sugar declaration
 - Strong and Static types
+- Object oriented without class and inheritance
+- Struct, Functions and Methods (with receivers)
 - Interfaces, but no declaration (duck typing)
-- Functions and Methods (with receivers)
 - No exceptions (error interface)
 - Visibility with the first letter of symbol
-- Unused imports and variables occurs compile error
-- Excellent and complete standard library
-
-* Go is
-
-- Fast
-- Friendly
-- Concurrent
 
 * OOP in Go
 
@@ -87,11 +51,6 @@ Go is statically typed and compiled but in many ways feels as lightweight and dy
 - A language is usually considered *object-based* if it *includes* *the* *basic* *capabilities* *for* *an* *object*: identity, properties, and attributes 
 
 - A language is considered *object-oriented* if it *is* *object-based* and also *has* *the* *capability* *of* *polymorphism* *and* *inheritance*
-
-* Does Go Have Objects?
-
-- Go lacks Classes
-- Go lacks "Objects"
 
 * Is Go Object-based Language?
 
@@ -107,6 +66,10 @@ Go is statically typed and compiled but in many ways feels as lightweight and dy
 
 .play introduction_to_go/object2.go /START OMIT/,/END OMIT/
 
+* Go is Object-based
+
+- Via struct and methods
+
 * Is Go Object-oriented Language?
 
 * What is "Inheritance" (wikipedia)
@@ -115,15 +78,32 @@ Go is statically typed and compiled but in many ways feels as lightweight and dy
 - Classes are created in hierarchies
 - Inheritance passes *knowledge* down!
 
+* Inheritance is not good
+
+_I_once_attended_a_Java_user_group_meeting_where_James_Gosling_(Java’s_inventor)_was_the_featured_speaker_.
+
+_During_the_memorable_Q&A_session,_someone_asked_him_:
+_“If_you_could_do_Java_over_again,_what_would_you_change?”_
+
+_“I’d_leave_out_classes,”_
+_he_replied_.
+
+_After_the_laughter_died_down,_he_explained_that_the_real_problem_wasn’t_classes_per_se,_
+_but_rather_implementation_inheritance_(the_extends_relationship)._
+
+_Interface_inheritance_(the_implements_relationship)_is_preferable._
+
+*You*should*avoid*implementation*inheritance*whenever*possible*.
+
 * Go's approach
 
-- Go explicitly avoided inheritance
+- Go avoided inheritance
 - Go strictly follows the *Composition* *over* *inheritance* principle
 # or Composite Reuse Principle
 
 * What is Composition
 - Provides reuse of Objects
-- One object is declared by including other objects
+- One object is declared by containing other objects
 - Composition pulls *knowledge* into another
 
 * Composition in Go
@@ -143,11 +123,14 @@ Go is statically typed and compiled but in many ways feels as lightweight and dy
 
 * Interfaces in Go
 - Interfaces are just sets of methods
-- Interfaces define behavior
+- Interfaces define behavior (duck typing)
 - "If something can do this, then it can be used here"
 
 * Interfaces in Go
 .play introduction_to_go/interface.go /START OMIT/,/END OMIT/
+
+* Interfaces in Go
+.code introduction_to_go/interface.go /START1 OMIT/,/END1 OMIT/
 
 * The Power of Interfaces
 
@@ -185,22 +168,18 @@ The *io* package doesn’t know *http*. It just works.
 .link http://localhost:4000/hello-world localhost:4000/hello-world
 .link http://localhost:4000/this-is-an-example-of-io.Writer localhost:4000/this-is-an-example-of-io.Writer
 
-* Go is simple!
-
-_Simple_can_be_harder_than_complex_:_You_have_to_work_hard_to_get_your_thinking_clean_to_make_it_simple_. _But_it's_worth_it_in_the_end_because_once_you_get_there_, _you_can_move_mountains_.
- - _Steve_Jobs_ -
+* Go is Object-Oriented
 
 * Concurrency in Go
 
 * What is concurrency
-- Concurrency is a property of systems in which several computations are executing simultaneously
-- Concurrency is the composition of independently executing processes.(http://blog.golang.org/concurrency-is-not-parallelism)
+
+- Concurrency is the *composition* *of* *independently* *executing* *computations*. 
 - It is not parallelism.
 
 * Go's Concurrency is:
 - Easy to understand.
 - Easy to use.
-- Easy to reason about.
 - You don't need to be an expert!
 
 * Go's approach
@@ -208,8 +187,6 @@ _Simple_can_be_harder_than_complex_:_You_have_to_work_hard_to_get_your_thinking_
 - In UNIX: processes connected by pipes:
  find ~/go/src | grep _test.go$ | xargs wc -l
 - In Go: *goroutines* connected by *channels*
-
-Share data by *Communicating*! (not by sharing memory)
 
 * Fundamentals #1 - Goroutine
 
@@ -220,9 +197,10 @@ Goroutines are *independently* *executing* *functions* in the same address space
  go f()
  go f(x, y, ...)
 
-- Very lightweight processes
-- A goroutine runs concurrently (but not necessarily in parallel)
+- It's not a thread
+- Very lightweight
 - A goroutine has its own stack
+- A goroutine runs concurrently (but not necessarily in parallel)
 
 * A simple example
 
@@ -230,7 +208,7 @@ Goroutines are *independently* *executing* *functions* in the same address space
 
 * Fundamentals #2 - Channel-based communication
 
-Channels are typed values that *allow* *goroutines* *to* *synchronize* *and* *exchange* *information*.
+Channels *allow* *goroutines* *to* *synchronize* *and* *exchange* *information*.
 
 - A channel type specifies a channel value type (and a communication direction):
 
@@ -260,30 +238,145 @@ Channels are typed values that *allow* *goroutines* *to* *synchronize* *and* *ex
 
 * Philosophy
 - Goroutines give the efficiency of an asynchronous model, but you can write code in a synchronous style.
-- Easier to reason about: write goroutines that do their specific jobs well, and connect them with channels.
- In practice, this yields simpler and more maintainable code.
-- Think about the concurrency issues that matter: 
- "Don’t communicate by sharing memory. Instead, share memory by communicating."
+- "Don’t communicate by sharing memory. Instead, share memory by communicating."
+
+* Go is simple!
+
+_Simple_can_be_harder_than_complex_:_You_have_to_work_hard_to_get_your_thinking_clean_to_make_it_simple_. _But_it's_worth_it_in_the_end_because_once_you_get_there_, _you_can_move_mountains_.
+- _Steve_Jobs_ -
+
+_단순함은_복잡함보다_어렵다._생각을_명쾌하게_해_단순하게_만드려면_굉장히_노력해야_한다._하지만_결국_그럴_가치가_있다._일단_단순함에_도달하면,_산을_움직일_수_있기_때문이다_.
+ 
+.image introduction_to_go/stevejobs.png
 
 * Real world Go
 
+* mixquare.com
 
+- Microchats for everyone
+- Instantly create a channel any topic, location or event
 
+* Message Flow
 
-* Example: unique ID service
-.code introduction_to_go/uniqueId.go
+.image introduction_to_go/mixquare_arch.png 500 _
 
-* Example: memory recycler
-.code introduction_to_go/memoryRecycler.go
+* Action of message processing worker
 
-* Example: Timeout
-.code introduction_to_go/timeout.go
+1. fetch user information
+2. fetch channel information
+3. save message to datastore
+4. publish
 
-* Example: Heartbeat
-.code introduction_to_go/heartbeat.go
+* Measure First!
 
-* Example: network multiplexor
-.code introduction_to_go/networkMultiplexor.go
+- ruby version
 
-* Example: first of N
-.code introduction_to_go/firstN.go
+- go version
+
+* Concurrency
+
+- RPC-bound jobs are very common
+- Excuting next job while waiting
+
+* Concurrency II
+
+- Run synchronously
+
+  err1 := msg.fetchUser()
+  err2 := msg.fetchChannel()
+  err3 := msg.process()
+
+  if err1 != nil || err2 != nil || err3 != nil {
+    /* ... */
+  }
+
+* Concurrency III
+
+- Run concurrently
+
+  errc := make(chan error)
+
+  go func() {
+    err := msg.fetchUser()
+    errc <- err
+  }()
+
+  go func() {
+    err := msg.fetchChannel()
+    errc <- err
+  }()
+
+  go func() {
+    err := msg.process()
+    errc <- err
+  }()
+
+  err1, err2, err3 := <-errc, <-errc, <- errc
+  if err1 != nil || err2 != nil || err3 != nil {
+    /* ... */
+  }
+
+* Caching
+
+- Using SQL can be slow
+- Using redis is good, but *fault* *tolerance* *is* *too* *hard*.
+- *Solution*: Use Go's concurrency to timeout waiting
+
+* Caching with control variance
+
+.code introduction_to_go/fetch_user.go /START1 OMIT/,/END1 OMIT/
+
+* Caching II
+
+- Using redis is good, but a high throughput is expensive
+- Using local memory is okay too, but *it* *can* *break* *data* *integrity*
+- *Solution*: Use Go's concurrency to flush memory
+
+* Caching with control variance II
+
+.code introduction_to_go/fetch_user.go /START2 OMIT/,/END2 OMIT/
+
+* Before and After
+
+- Baseline: 
+
+- Concurrency:
+
+- Caching:
+
+* Bulk processing
+
+- Processing 100 messages is easier than processing a single message 100 times
+- Use goroutine to bulk processing
+
+  deliveries, err := q.Consume()
+
+  for delivery := range deliveries {
+    if err := process(d.Body, q); err != nil {
+      /* error handling */
+    }
+  }
+
+* Bulk processing II
+
+- Set QUEUE_PREFETCH_COUNT to 100
+
+  const QUEUE_PREFETCH_COUNT 100
+
+- Processing 100 message simultaneously
+
+  deliveries, err := q.Consume()
+
+  for delivery := range deliveries {
+    go func(d amqp.Delivery) {
+      if err := process(d.Body, q); err != nil {
+        /* error handling */
+      }
+    }(delivery)
+  }
+
+*  Go is... not so great
+
+Go is young language
+
+# mixquare-worker-message-go -amqp-uri=amqp://guest:guest@192.168.81.111:5672 -mongo-uri=mongodb://mixquare:aabb1122@192.168.81.106:27007/mixquare_staging -sql-uri="mysql://mixquare:aabb1122@tcp(192.168.81.106:3306)/mixquare_staging?charset=utf8mb4,utf8" -amqp-prefetch-count=1

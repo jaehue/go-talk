@@ -2,19 +2,18 @@ package main
 
 import "fmt"
 
-// Type Declaration
+// START1 OMIT
 type Rect struct {
 	width  int
 	height int
 }
 type Rects []Rect
 
-// Declaring a Method
-func (r Rect) Area() int {
+func (r Rect) Area() int {	// HL
 	return r.width * r.height
 }
 
-func (rs Rects) Area() int {
+func (rs Rects) Area() int {	// HL
 	var a int
 	for _, r := range rs {
 		a += r.Area()
@@ -27,6 +26,7 @@ func (rs Rects) Area() int {
 type Shaper interface {
 	Area() int // HL
 }
+// END1 OMIT
 
 // Using Interface as Param Type
 func Describe(s Shaper) {
