@@ -44,6 +44,31 @@ jaehue@jang.io
 - No exceptions (error interface)
 - Visibility with the first letter of symbol
 
+* Go code
+
+  // Contents returns the file's contents as a string.
+  func Contents(filename string) (string, error) {
+    f, err := os.Open(filename)
+    if err != nil {
+        return "", err
+    }
+    defer f.Close()  // f.Close will run when we're finished.
+
+    var result []byte
+    buf := make([]byte, 100)
+    for {
+        n, err := f.Read(buf[0:])
+        result = append(result, buf[0:n]...) // append is discussed later.
+        if err != nil {
+            if err == io.EOF {
+                break
+            }
+            return "", err  // f will be closed if we return here.
+        }
+    }
+    return string(result), nil // f will be closed if we return here.
+  }
+
 * OOP in Go
 
 * What is "Object Oriented" (wikipedia)
@@ -282,8 +307,12 @@ _단순함은_복잡함보다_어렵다._생각을_명쾌하게_해_단순하게
 
 - Run synchronously
 
-  err1 := msg.fetchUser()
-  err2 := msg.fetchChannel()
+  u, err1 := msg.fetchUser()
+  msg.setUser(u)
+
+  c, err2 := msg.fetchChannel()
+  msg.setChannel(c)
+
   err3 := msg.process()
 
   if err1 != nil || err2 != nil || err3 != nil {
@@ -294,49 +323,35 @@ _단순함은_복잡함보다_어렵다._생각을_명쾌하게_해_단순하게
 
 - Run concurrently
 
-  errc := make(chan error)
+.code -numbers introduction_to_go/mixquare_concurrency.go
 
-  go func() {
-    err := msg.fetchUser()
-    errc <- err
-  }()
+* Concurrency IV
 
-  go func() {
-    err := msg.fetchChannel()
-    errc <- err
-  }()
-
-  go func() {
-    err := msg.process()
-    errc <- err
-  }()
-
-  err1, err2, err3 := <-errc, <-errc, <- errc
-  if err1 != nil || err2 != nil || err3 != nil {
-    /* ... */
-  }
+- Result:
 
 * Caching
 
 - Using SQL can be slow
 - Using redis is good, but *fault* *tolerance* *is* *too* *hard*.
-- *Solution*: Use Go's concurrency to timeout waiting
+- *Solution*: Timeout waiting
 
 * Caching with control variance
 
-.code introduction_to_go/fetch_user.go /START1 OMIT/,/END1 OMIT/
+.code introduction_to_go/mixquare_fetch_user.go /START1 OMIT/,/END1 OMIT/
 
 * Caching II
 
 - Using redis is good, but a high throughput is expensive
 - Using local memory is okay too, but *it* *can* *break* *data* *integrity*
-- *Solution*: Use Go's concurrency to flush memory
+- *Solution*: Flushing memory
 
 * Caching with control variance II
 
-.code introduction_to_go/fetch_user.go /START2 OMIT/,/END2 OMIT/
+.code introduction_to_go/mixquare_fetch_user.go /START2 OMIT/,/END2 OMIT/
 
 * Before and After
+
+- Ruby version:
 
 - Baseline: 
 
@@ -374,6 +389,8 @@ _단순함은_복잡함보다_어렵다._생각을_명쾌하게_해_단순하게
       }
     }(delivery)
   }
+
+* Conclusion
 
 *  Go is... not so great
 
