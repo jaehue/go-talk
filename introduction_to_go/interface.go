@@ -22,10 +22,10 @@ func (rs Rects) Area() int {	// HL
 }
 
 // START OMIT
-// Interface Declaration (Struct)
-type Shaper interface {
+// Interface Declaration
+type Shaper interface { // HL
 	Area() int // HL
-}
+} // HL
 // END1 OMIT
 
 // Using Interface as Param Type
