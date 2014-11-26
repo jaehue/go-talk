@@ -9,11 +9,11 @@ type Rect struct {
 }
 type Rects []Rect
 
-func (r Rect) Area() int {	// HL
+func (r Rect) Area() int {	// HLinterface
 	return r.width * r.height
 }
 
-func (rs Rects) Area() int {	// HL
+func (rs Rects) Area() int {	// HLinterface
 	var a int
 	for _, r := range rs {
 		a += r.Area()
@@ -23,15 +23,15 @@ func (rs Rects) Area() int {	// HL
 
 // START OMIT
 // Interface Declaration
-type Shaper interface { // HL
-	Area() int // HL
-} // HL
+type Shaper interface { // HLinterface
+	Area() int // HLinterface
+} // HLinterface
 // END1 OMIT
 
 // Using Interface as Param Type
-func Describe(s Shaper) {
-	fmt.Println("Area is:", s.Area())
-}
+func Describe(s Shaper) { // HL
+	fmt.Println("Area is:", s.Area()) // HL
+} // HL
 
 // In Action
 func main() {

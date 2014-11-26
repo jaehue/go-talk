@@ -1,13 +1,14 @@
 Introduction to Go
 GDG Korea DevFair 2014
 
+
 장재휴
 Developer, Purpleworks
 jaehue@jang.io
 
 * Simple can be harder than complex
  
-.image introduction_to_go/simple_can_be_harder_than_complex.jpg 430 _
+.image introduction_to_go/simple_can_be_harder_than_complex2.jpg 430 _
 
 _단순함은_복잡함보다_어렵다_.
 _생각을_명쾌하게_해_단순하게_만드려면_굉장히_노력해야_한다_.
@@ -20,6 +21,7 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 - Concurrency in Go
 - Real world Go
 
+.image introduction_to_go/devfair2014_2.png _ 550
 .image introduction_to_go/go-logo.jpg
 
 * What is Go
@@ -28,8 +30,8 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 
 - Statically typed languages ➔ Efficient vs. Hard to write
 - Dynamic language ➔ Easy to use vs. Slow & error-prone
-- Concurrent programming is hard(thread, lock, mutex)
 - Speed, Safety, Ease to use
+- Concurrent programming is hard(thread, lock, mutex)
 
 * What is go
 
@@ -41,7 +43,6 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 - garbage-collected
 - efficient
 - simply
-- fun
 
 * OOP in Go
 
@@ -77,24 +78,24 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 - "If something can do this, then it can be used here"
 
 * Interfaces in Go
-.code introduction_to_go/interface.go /START1 OMIT/,/END1 OMIT/
+.code introduction_to_go/interface.go /START1 OMIT/,/END1 OMIT/ HLinterface
 
 * Interfaces in Go II
 .play introduction_to_go/interface.go /START OMIT/,/END OMIT/
 
 * The Power of Interfaces
 
-Writer interface in standard *"io"* package
+- Fprintln function in standard *"fmt"* package
+
+  func Fprintln(w io.Writer, a ...interface{}) (n int, err error)
+
+- Writer interface in standard *"io"* package
 
  // http://godoc.org/io#Writer
  type Writer interface {
      Write(p []byte) (n int, err os.Error)
  }
 
-- Write writes up to len(p) bytes into p
-- Returns the # of bytes written & any error
-- Does not dictate how Write() is implemented
-- Used by fmt.Fprint, os.File, bytes.Buffer, net.Conn, http.Response.Body, etc.
 
 * The Power of Interfaces
 
@@ -138,7 +139,7 @@ The *io* package doesn’t know *http*. It just works.
 
 * Fundamentals #1 - Goroutine
 
-Goroutines are *independently* *executing* *functions* in the same address space.
+Goroutines are *independently* *executing* *functions*.
 
 - The go statement launches a function call as a goroutine
 
@@ -148,7 +149,7 @@ Goroutines are *independently* *executing* *functions* in the same address space
 - It's not a thread
 - Very lightweight
 - A goroutine has its own stack
-- A goroutine runs concurrently (but not necessarily in parallel)
+- A goroutine runs concurrently
 
 * Goroutine example
 
@@ -253,48 +254,6 @@ Channels *allow* *goroutines* *to* *synchronize* *and* *exchange* *information*.
 
 .code introduction_to_go/mixquare_fetch_user.go /START1 OMIT/,/END1 OMIT/
 
-* Caching II
-
-- Using redis is good, but a high throughput is expensive
-- Using local memory is okay too, but *it* *can* *break* *data* *integrity*
-- *Solution*: Flushing memory
-
-* Caching with control variance II
-
-.code introduction_to_go/mixquare_fetch_user.go /START2 OMIT/,/END2 OMIT/
-
-* Bulk processing
-
-  deliveries, err := q.Consume()
-
-  for delivery := range deliveries {
-    if err := process(d.Body, q); err != nil {
-      /* error handling */
-    }
-  }
-
-- Processing 100 messages is easier than processing a single message 100 times
-- Use goroutine to bulk processing
-
-
-* Bulk processing II
-
-- Set QUEUE_PREFETCH_COUNT to 100
-
-  const QUEUE_PREFETCH_COUNT 100
-
-- Processing 100 message simultaneously
-
-  deliveries, err := q.Consume()
-
-  for delivery := range deliveries {
-    go func(d amqp.Delivery) {
-      if err := process(d.Body, q); err != nil {
-        /* error handling */
-      }
-    }(delivery)
-  }
-
 * Before and After
 
 - Ruby version:
@@ -304,8 +263,6 @@ Channels *allow* *goroutines* *to* *synchronize* *and* *exchange* *information*.
 - Concurrency:
 
 - Caching:
-
-- Bulk processing:
 
 * Conclusion
 
