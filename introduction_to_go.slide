@@ -28,9 +28,9 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 
 * Why Go?
 
-- Statically typed languages ➔ Efficient vs. Hard to write
-- Dynamic language ➔ Easy to use vs. Slow & error-prone
-- Speed, Safety, Ease to use
+- Statically typed languages ➔ *Efficient* vs *Hard*to*write*
+- Dynamic language ➔ *Easy*to*use* vs *Slow*
+- *Speed* vs *Safety* vs *Ease*to*use*
 - Concurrent programming is hard(thread, lock, mutex)
 
 * What is go
@@ -46,9 +46,9 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 
 * OOP in Go
 
-* 1. Object via struct and methods
+* 1. Object via struct and method
 
-- Go lacks Classes. Go lacks "Objects"
+- No Classes. No "Objects"
 - But Go is object-based
 
 * Object in Go
@@ -59,11 +59,10 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 
 .play introduction_to_go/object2.go /START OMIT/,/END OMIT/
 
-* 2. Composition over inheritance
+* 2. Code reuse
 
-- Go avoided inheritance
-- Go strictly follows the *Composition* *over* *inheritance* principle
-- Composition provides reuse of Objects
+- No Inheritance
+- *Composition* *over* *inheritance* principle
 
 * Composition in Go
 .play introduction_to_go/composition1.go /START OMIT/,/END OMIT/
@@ -71,10 +70,10 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 * Composition in Go II
 .play introduction_to_go/composition2.go /START OMIT/,/END OMIT/
 
-* 3. Polymorphism via interfaces
+* 3. Polymorphism via interface
 
-- Interfaces are just sets of methods
-- Interfaces define behavior (duck typing)
+- Interface is *just*set*of*methods*
+- Interface define behavior (duck typing)
 - "If something can do this, then it can be used here"
 
 * Interfaces in Go
@@ -83,11 +82,7 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
 * Interfaces in Go II
 .play introduction_to_go/interface.go /START OMIT/,/END OMIT/
 
-* The Power of Interfaces
-
-- Fprintln function in standard *"fmt"* package
-
-  func Fprintln(w io.Writer, a ...interface{}) (n int, err error)
+* The Power of Interface
 
 - Writer interface in standard *"io"* package
 
@@ -96,8 +91,12 @@ _하지만_결국_그럴_가치가_있다_. _일단_단순함에_도달하면,_�
      Write(p []byte) (n int, err os.Error)
  }
 
+- Fprintln function in standard *"fmt"* package
 
-* The Power of Interfaces
+  func Fprintln(w io.Writer, a ...interface{}) (n int, err error)
+
+
+* The Power of Interface
 
 In handle function, just write to *io.Writer* object
 
@@ -105,14 +104,13 @@ In handle function, just write to *io.Writer* object
      fmt.Fprintln(w, msg)
  }
 
-The *os.Stdout* define Write function. It can be used for *io.Writer*.
+The *os.Stdout* can be used for *io.Writer*.
 
 .play introduction_to_go/interface2.go /START OMIT/,/END OMIT/
 
-* The Power of Interfaces
+* The Power of Interface
 
-The *http.ResponseWriter* define Write function too. It can be used for *io.Writer*.
-The *io* package doesn’t know *http*. It just works.
+The *http.ResponseWriter* can be used for *io.Writer*.
 
 .play introduction_to_go/interface3.go /START OMIT/,/END OMIT/
 
@@ -123,7 +121,7 @@ The *io* package doesn’t know *http*. It just works.
 
 * What is concurrency
 
-- Concurrency is the *composition* *of* *independently* *executing* *computations*. 
+- *Composition* *of* *independently* *executing* *computations*. 
 - It is not parallelism.
 
 * Go's Concurrency is
@@ -139,7 +137,7 @@ The *io* package doesn’t know *http*. It just works.
 
 * Fundamentals #1 - Goroutine
 
-Goroutines are *independently* *executing* *functions*.
+*Independently* *executing* *function*.
 
 - The go statement launches a function call as a goroutine
 
@@ -157,25 +155,22 @@ Goroutines are *independently* *executing* *functions*.
 
 * Fundamentals #2 - Channel-based communication
 
-Channels *allow* *goroutines* *to* *synchronize* *and* *exchange* *information*.
+Channel allow goroutines to *exchange* *information* and *synchronize*.
 
-- A channel type specifies a channel value type (and a communication direction):
+- Define
 
  chan int
  chan<- string  // send-only channel
  <-chan T       // receive-only channel
 
-- A channel is a variable of channel type:
+- Create channel
 
- var ch chan int
- ch := make(chan int)  // declare and initialize with newly made channel
+ ch = make(chan int)
 
-- A channel permits sending and receiving values:
+- Use
 
  ch <- 1   // send value 1 on channel ch
- x = <-ch  // receive a value from channel ch (and assign to x)
-
-- Channel operations synchronize the communicating goroutines.
+ x = <-ch  // receive a value from channel ch
 
 * Communicating goroutines
 
@@ -186,8 +181,9 @@ Channels *allow* *goroutines* *to* *synchronize* *and* *exchange* *information*.
 .play introduction_to_go/pingpong.go /START OMIT/,/END OMIT/
 
 * Philosophy
-- Goroutines give the efficiency of an asynchronous model, but you can write code in a synchronous style.
-- "Don’t communicate by sharing memory. Instead, share memory by communicating."
+- Goroutines give the efficiency of an asynchronous model.
+- But you can write code in a synchronous style.
+- _"Don’t_communicate_by_sharing_memory_._Instead,_share_memory_by_communicating."_
 
 * Real world Go
 
