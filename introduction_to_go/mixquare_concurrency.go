@@ -1,8 +1,7 @@
   errc := make(chan error)
 
   go func() { // HL
-    u, err := msg.fetchUser()
-    msg.setUser(u)
+    err := msg.save()
     errc <- err // HL
   }()
 
@@ -13,7 +12,8 @@
   }()
 
   go func() { // HL
-    err := msg.process()
+    u, err := msg.fetchUser()
+    msg.setUser(u)
     errc <- err // HL
   }()
 

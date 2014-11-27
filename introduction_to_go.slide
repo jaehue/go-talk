@@ -160,8 +160,6 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 - Define
 
  chan int
- chan<- string  // send-only channel
- <-chan T       // receive-only channel
 
 - Create channel
 
@@ -181,8 +179,8 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 .play introduction_to_go/pingpong.go /START OMIT/,/END OMIT/
 
 * Philosophy
-- Goroutines give the efficiency of an asynchronous model.
-- But you can write code in a synchronous style.
+- Goroutines give the efficiency of an *asynchronous*model*.
+- But you can write code in a *synchronous*style*.
 - _"Don’t_communicate_by_sharing_memory_._Instead,_share_memory_by_communicating."_
 
 * Real world Go
@@ -192,26 +190,28 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 - Microchats for everyone
 - Instantly create a channel any topic, location or event
 
+.image introduction_to_go/mixquare1.png _ 800
+
 * Message Flow
 
 .image introduction_to_go/mixquare_arch.png 500 _
 
 * Action of message processing worker
 
-1. fetch user information
+1. save message to datastore
 2. fetch channel information
-3. save message to datastore
+3. fetch user information
 4. publish
 
 * Measure First
 
 - ruby version
 
-.image introduction_to_go/ruby.png 200 _
+.image introduction_to_go/ruby.png
 
 - go version
 
-.image introduction_to_go/baseline.png 200 _
+.image introduction_to_go/baseline.png
 
 * Concurrency
 
@@ -222,13 +222,13 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 
 - Run synchronously
 
-  u, err1 := msg.fetchUser()
-  msg.setUser(u)
+  err1 := msg.save()
 
   c, err2 := msg.fetchChannel()
   msg.setChannel(c)
 
-  err3 := msg.process()
+  u, err3 := msg.fetchUser()
+  msg.setUser(u)
 
   if err1 != nil || err2 != nil || err3 != nil {
     /* ... */
@@ -244,11 +244,11 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 
 - baseline
 
-.image introduction_to_go/baseline.png 200 _
+.image introduction_to_go/baseline.png
 
 - concurrency
 
-.image introduction_to_go/concurrency.png 200 _
+.image introduction_to_go/concurrency.png
 
 * Caching
 
@@ -264,21 +264,21 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 
 - concurrency
 
-.image introduction_to_go/concurrency.png 200 _
+.image introduction_to_go/concurrency.png
 
 - caching
 
-.image introduction_to_go/caching.png 200 _
+.image introduction_to_go/caching.png
 
 * Before and After
 
 - ruby version
 
-.image introduction_to_go/ruby.png 200 _
+.image introduction_to_go/ruby.png
 
 - go version
 
-.image introduction_to_go/caching.png 200 _
+.image introduction_to_go/caching.png
 
 * Conclusion
 
