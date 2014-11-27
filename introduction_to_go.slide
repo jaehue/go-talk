@@ -207,7 +207,11 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 
 - ruby version
 
+.image introduction_to_go/ruby.png 200 _
+
 - go version
+
+.image introduction_to_go/baseline.png 200 _
 
 * Concurrency
 
@@ -236,9 +240,15 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 
 .code -numbers introduction_to_go/mixquare_concurrency.go
 
-* Concurrency IV
+* Result(Concurrency)
 
-- Result:
+- baseline
+
+.image introduction_to_go/baseline.png 200 _
+
+- concurrency
+
+.image introduction_to_go/concurrency.png 200 _
 
 * Caching
 
@@ -250,15 +260,25 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 
 .code introduction_to_go/mixquare_fetch_user.go /START1 OMIT/,/END1 OMIT/
 
+* Result(Caching)
+
+- concurrency
+
+.image introduction_to_go/concurrency.png 200 _
+
+- caching
+
+.image introduction_to_go/caching.png 200 _
+
 * Before and After
 
-- Ruby version:
+- ruby version
 
-- Baseline: 
+.image introduction_to_go/ruby.png 200 _
 
-- Concurrency:
+- go version
 
-- Caching:
+.image introduction_to_go/caching.png 200 _
 
 * Conclusion
 
