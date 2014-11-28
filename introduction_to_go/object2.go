@@ -31,6 +31,7 @@ func main() {
 	r := Rect{width: 10, height: 5}
 	x := Rect{width: 7, height: 10}
 	rs := Rects{r, x}
+	
 	fmt.Println("r's area: ", r.Area())
 	fmt.Println("x's area: ", x.Area())
 	fmt.Println("total area: ", rs.Area())

@@ -17,6 +17,7 @@ func main() {
 	go f("A--", 300*time.Millisecond)
 	go f("-B-", 500*time.Millisecond)
 	go f("--C", 1100*time.Millisecond)
+	
 	time.Sleep(10 * time.Second)
 }
 

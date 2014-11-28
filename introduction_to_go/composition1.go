@@ -20,6 +20,7 @@ func main() {
 		Name:    "Steve",
 		Address: Address{Number: "13", Street: "Main", City: "Gotham", State: "NY"}, // HL
 	}
+	
 	fmt.Println(p)
 	fmt.Println(p.Address)
 }

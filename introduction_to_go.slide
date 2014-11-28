@@ -8,7 +8,7 @@ jaehue@jang.io
 
 * Simple can be harder than complex
  
-.image introduction_to_go/simple_can_be_harder_than_complex2.jpg 430 _
+.image introduction_to_go/simple_can_be_harder_than_complex2.jpg 400 _
 
 _단순함은_복잡함보다_어렵다_.
 _생각을_명쾌하게_해_단순하게_만드려면_굉장히_노력해야_한다_.
@@ -117,6 +117,12 @@ The *http.ResponseWriter* can be used for *io.Writer*.
 .link http://localhost:4000/hello-world localhost:4000/hello-world
 .link http://localhost:4000/this-is-an-example-of-io.Writer localhost:4000/this-is-an-example-of-io.Writer
 
+* Go is object-oriented!
+
+- Go is object-based
+- Go provides code reuse
+- Polymorphism via interfaces
+
 * Concurrency in Go
 
 * What is concurrency
@@ -161,7 +167,7 @@ Channel allow goroutines to *exchange* *information* and *synchronize*.
 
  chan int
 
-- Create channel
+- Create
 
  ch = make(chan int)
 
