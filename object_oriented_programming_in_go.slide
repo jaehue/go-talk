@@ -1,0 +1,171 @@
+Object-Oriented Programming in Go
+Go Seoul Meetup
+24 Jan 2015
+
+장재휴
+Developer, Purpleworks
+jaehue@jang.io
+
+* Who am I
+
+- Ruby
+- C#
+- Go
+
+* What is "Object Oriented" (wikipedia)
+
+- A language is usually considered *object-based* if it *includes* *the* *basic* *capabilities* *for* *an* *object*: identity, properties, and attributes
+
+- A language is considered *object-oriented* if it *is* *object-based* and also *has* *the* *capability* *of* *polymorphism* *and* *inheritance*
+
+* Is Go Object-based Language?
+
+* What is an "Object" (wikipedia)
+
+-  An object is an abstract data type that has *state(data)* and *behavior(code)*
+
+* Object in Go (via Custom Type & Method)
+
+.play object_oriented_programming_in_go/object1.go
+
+* Custom Type of built-in Type
+
+.play object_oriented_programming_in_go/object2.go /START OMIT/,/END OMIT/
+
+* Go is Object-based
+
+- Via custom type and methods
+
+* Is Go Object-oriented Language?
+
+
+* What is "Inheritance" (wikipedia)
+
+- Provides reuse of existing objects
+- Classes are created in hierarchies
+- Inheritance passes *knowledge* down!
+
+* Inheritance is not good
+
+In Java user group meeting, 
+James Gosling (Java’s inventor) says:
+
+*You*should*avoid*implementation*inheritance*whenever*possible*.
+
+* Go's approach
+
+- Go avoided inheritance
+- Go strictly follows the *Composition* *over* *inheritance* principle
+# or Composite Reuse Principle
+
+* What is Composition
+- Provides reuse of Objects
+- One object is declared by containing other objects
+- Composition pulls *knowledge* into another
+
+* Composition in Go
+.play object_oriented_programming_in_go/composition1.go /START OMIT/,/END OMIT/
+
+* Call Method of Embedded Type
+.play object_oriented_programming_in_go/composition2.go /START OMIT/,/END OMIT/
+
+* Method Overriding
+.play object_oriented_programming_in_go/composition3.go /START OMIT/,/END OMIT/
+
+* Composition in Go 2
+.play object_oriented_programming_in_go/composition4.go /START OMIT/,/END OMIT/
+
+* Composition in Go 3
+.play object_oriented_programming_in_go/composition5.go /START OMIT/,/END OMIT/
+
+* Composition in Go 4
+.play object_oriented_programming_in_go/composition6.go /START OMIT/,/END OMIT/
+
+* What is "Polymorphism" (wikipedia)
+- The provision of a single interface to entities of different types
+- Via *Generics*, *Overloading* and/or *Subtyping*
+
+* Go’s approach
+- Go avoided subtyping & overloading
+- Go does not provide Generics
+- Polymorphism via interfaces
+
+* Interfaces in Go
+- Interfaces are just sets of methods
+- Interfaces define behavior (duck typing)
+- "If something can do this, then it can be used here”
+
+* Interfaces in Go
+.code object_oriented_programming_in_go/interface1.go /START1 OMIT/,/END1 OMIT/
+
+* Interfaces in Go
+.play object_oriented_programming_in_go/interface1.go /START2 OMIT/,/END2 OMIT/
+
+* Interfaces in Go 2
+.play object_oriented_programming_in_go/interface.go /START OMIT/,/END OMIT/
+
+* Satisfying Interface of Other Package
+
+- `fmt.Println`
+
+  func Println(a ...interface{}) (n int, err error) {
+    return Fprintln(os.Stdout, a...)
+  }
+
+  func Fprintln(w io.Writer, a ...interface{}) (n int, err error) {
+    ...
+    // print using Stringer interface
+    ...
+    return
+  }
+
+- `fmt.Stringer`
+
+  type Stringer interface {
+    String() string
+  }
+
+* Satisfying Interface of Other Package
+.code object_oriented_programming_in_go/interface4.go /START OMIT/,/END OMIT/
+
+* Satisfying Interface of Other Package
+.play object_oriented_programming_in_go/interface4.go /START1 OMIT/,/END1 OMIT/
+
+
+* Deep into Go's Standard Library
+
+Writer interface in standard *"io"* package
+
+ // http://godoc.org/io#Writer
+ type Writer interface {
+     Write(p []byte) (n int, err os.Error)
+ }
+
+- Write writes up to len(p) bytes into p
+- Returns the # of bytes written & any error
+- Does not dictate how Write() is implemented
+- Used by fmt.Fprint, os.File, bytes.Buffer, net.Conn, http.Response.Body, etc.
+
+* The Power of Interfaces
+
+In handle function, just write to *io.Writer* object
+
+ func handle(w io.Writer, msg string) {
+     fmt.Fprintln(w, msg)
+ }
+
+The *os.Stdout* define Write function. It can be used for *io.Writer*.
+
+.play object_oriented_programming_in_go/interface2.go /START OMIT/,/END OMIT/
+
+* The Power of Interfaces
+
+The *http.ResponseWriter* define Write function too. It can be used for *io.Writer*.
+The *io* package doesn’t know *http*. It just works.
+
+.play object_oriented_programming_in_go/interface3.go /START OMIT/,/END OMIT/
+
+.link http://localhost:4000/hello-world localhost:4000/hello-world
+.link http://localhost:4000/this-is-an-example-of-io.Writer localhost:4000/this-is-an-example-of-io.Writer
+
+* Go is Object-Oriented
