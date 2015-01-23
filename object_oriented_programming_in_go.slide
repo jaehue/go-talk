@@ -5,12 +5,16 @@ Go Seoul Meetup
 장재휴
 Developer, Purpleworks
 jaehue@jang.io
+http://www.slideshare.net/JaehueJang/object-oriented-programming-in-go
 
 * Who am I
 
-- Ruby
-- C#
-- Go
+- Elandsystems ➜ purpleworks
+- Ruby, C#, Go
+
+* Agenda
+
+- OOP in Go
 
 * What is "Object Oriented" (wikipedia)
 
@@ -134,17 +138,16 @@ James Gosling (Java’s inventor) says:
 
 * Deep into Go's Standard Library
 
-Writer interface in standard *"io"* package
+- `io.Writer` interface
 
  // http://godoc.org/io#Writer
  type Writer interface {
      Write(p []byte) (n int, err os.Error)
  }
 
-- Write writes up to len(p) bytes into p
-- Returns the # of bytes written & any error
-- Does not dictate how Write() is implemented
-- Used by fmt.Fprint, os.File, bytes.Buffer, net.Conn, http.Response.Body, etc.
+- `fmt.Fprintln` function
+
+  func Fprintln(w io.Writer, a ...interface{}) (n int, err error)
 
 * The Power of Interfaces
 
@@ -154,14 +157,13 @@ In handle function, just write to *io.Writer* object
      fmt.Fprintln(w, msg)
  }
 
-The *os.Stdout* define Write function. It can be used for *io.Writer*.
+The *os.Stdout* can be used for *io.Writer*.
 
 .play object_oriented_programming_in_go/interface2.go /START OMIT/,/END OMIT/
 
 * The Power of Interfaces
 
-The *http.ResponseWriter* define Write function too. It can be used for *io.Writer*.
-The *io* package doesn’t know *http*. It just works.
+The *http.ResponseWriter* can be used for *io.Writer*.
 
 .play object_oriented_programming_in_go/interface3.go /START OMIT/,/END OMIT/
 
