@@ -1,0 +1,225 @@
+Let's start PHP
+12 Jun 2015
+
+장재휴
+purpleworks
+
+* PHP
+
+- Hypertext Preprocessor
+- 동적인 웹페이지를 만들기 위해 사용되는 오픈 소스 기반의 서버측 스크립트 언어
+- Escaping from HTML
+  <?php
+  ...
+  ?>
+
+.link http://php.net/manual/kr/index.php
+
+* Data Types
+
+- 정수형(integer)
+- 실수형(float, double)
+- 문자열(string)
+- 불(boolean)
+- 배열(array)
+- 객체(object)
+- Resource(resource)
+- NULL(NULL)
+
+.link http://192.168.59.103/string.php
+
+* Variables
+
+- 변수명 앞에 달러사인($)을 붙힌다.
+- 대소문자를 구분한다.
+- 값이 할당될 때 변수의 타입이 결정된다.
+- 변수의 참조값은 엠퍼센트(&)를 붙힌다.
+
+* Type Juggling
+
+- 예제 1
+  <?php
+  $foo = "0";  // $foo is string (ASCII 48)
+  $foo += 2;   // $foo is now an integer (2)
+  $foo = $foo + 1.3;  // $foo is now a float (3.3)
+  $foo = 5 + "10 Little Piggies"; // $foo is integer (15)
+  $foo = 5 + "10 Small Pigs";     // $foo is integer (15)
+  ?>
+- 예제 2
+  <?php
+  $a    = 'car'; // $a is a string
+  $a[0] = 'b';   // $a is still a string
+  echo $a;       // bar
+  ?>
+
+
+* Variables From External Sources
+
+A simple HTML form
+
+  <form action="foo.php" method="post">
+      Name:  <input type="text" name="username" /><br />
+      Email: <input type="text" name="email" /><br />
+      <input type="submit" name="submit" value="Submit me!" />
+  </form>
+
+Accessing data from a simple POST HTML form
+
+  <?php
+  echo $_POST['username'];
+  echo $_REQUEST['username'];
+  ?>
+
+
+* Variable Variables
+
+변수의 이름을 동적으로 바꿀 경우 사용.
+
+  <?php
+  $a = 'hello';
+  $$a = 'world';
+  echo "$a ${$a}" . "<br>";
+  echo "$a $hello";
+
+  $a = "foo";
+  $foo = "bar";
+  echo $$a;
+  ?>
+  
+.link http://192.168.59.103/var.php
+
+* Type Casting 1
+
+- 규칙
+  (int), (integer) - cast to integer
+  (bool), (boolean) - cast to boolean
+  (float), (double), (real) - cast to float
+  (string) - cast to string
+  (array) - cast to array
+  (object) - cast to object
+  (unset) - cast to NULL (PHP 5)
+- 예제
+  <?php
+  $foo = 10;   // $foo is an integer
+  $bar = (boolean) $foo;   // $bar is a boolean
+
+  $foo = 10;            // $foo is an integer
+  $str = "$foo";        // $str is a string
+  $fst = (string) $foo; // $fst is also a string
+  ?>
+
+.link http://192.168.59.103/casting.php
+
+* Type Casting 2
+
+- bool 변환시 FALSE로 간주되는 녀석들
+  integer 0 (zero)
+  float 0.0 (zero)
+  비어있는 string, 그리고 string "0"
+  요소를 가지지 않는 array
+  멤버 변수를 가지지 않는 object (PHP 4 에서만 적용)
+  특별한 타입 NULL (unset 변수 포함)
+  빈 태그로부터 만들어진 SimpleXML 객체
+- 예제
+  <?php
+  var_dump((bool) "");        // bool(false)
+  var_dump((bool) 1);         // bool(true)
+  var_dump((bool) -2);        // bool(true)
+  var_dump((bool) "foo");     // bool(true)
+  var_dump((bool) 2.3e5);     // bool(true)
+  var_dump((bool) array(12)); // bool(true)
+  var_dump((bool) array());   // bool(false)
+  var_dump((bool) "false");   // bool(true)
+  ?>
+
+* 상수 (Constants)
+
+상수의 선언은 define() 함수를 사용한다.
+
+  bool define (string name, mixed value [,bool case_insensitive])
+
+상수의 호출은 일반 PHP 변수와는 다르게 앞에 $를 붙히지 않는다.
+동적으로 상수값을 가져올때는 constants() 함수를 사용한다. 상수 명을 바로 사용해도 됨.
+
+  mixed constant (string name)
+
+정의된 모든 상수 목록은 get_defined_constants() 함수를 통해 얻어온다.
+
+  array get_defined_constants ([ bool $categorize ] )
+
+defined() 함수 : 상수가 존재하는지 여부를 결정한다.
+
+  bool defined ( string name)
+
+존재하면 TRUE를 존재하지 않으면 FALSE를 반환한다.
+
+* Magic constants
+
+미리 정의된 상수
+
+  __LINE__  파일의 현재 줄 번호
+  __FILE__  심볼릭 링크를 통해 해석된 경우를 포함한 파일의 전체 경로와 이름. 
+            include 내부에서 사용할 경우, include된 파일명이 반환됩니다.
+  __DIR__   파일의 디렉토리. 포함한 파일 안에서는, 포함된 파일의 디렉토리를 반환합니다.
+            이는 dirname(__FILE__)과 동일합니다.
+            디렉토리명은 루트 디렉토리가 아닌 이상, 마지막에 슬래시가 없습니다.
+  __CLASS__ 클래스명. (PHP 4.3.0에서 추가) PHP 5부터 이 상수는 정의된 그대로의 클래스명을 반환합니다.(대소문자 구분)
+            클래스명은 선언한 이름공간을 포함합니다. (예. Foo\Bar) 
+            PHP 5.4부터 __CLASS__는 trait에서도 동작합니다.
+            trait 메소드 안에서 사용할 때, __CLASS__는 trait가 사용되는 클래스명입니다.
+  __TRAIT__ trait 명. trait 명은 이를 선언한 네임스페이스를 포함합니다. (예. Foo\Bar)
+  __METHOD__    클래스 메소드명.
+  __FUNCTION__  The function name.
+  __NAMESPACE__ 현재 네임스페이스 이름.
+
+
+* 연산자(Operators)
+
+다른 대부분의 언어와 비슷함
+
+- 특이한 연산자
+
+  // . 좌우의 문자열을 합친다
+  "Hello, " . "World!" // Hello, World!
+
+  // 삼항 연산자
+  5<3 ? printf("TRUE") : printf("FALSE"); 
+
+  // 변수 연산자
+  $
+
+  // 오류 억제 연산자
+  @
+
+  // 객체 연산자
+  new, ->          
+
+* include & require
+
+- include: 특정 파일을 인클루드 하고 적용시킴. 실패시 Warning.
+- require: 특정 파일을 인클루드 하고 적용시킴. 실패시 Fatal Error.
+- include_once, require_once: 한번만 인클루드 함.
+
+인클루드 순서
+
+1. [현재 작업 디렉토리 + include_path]에서 찾음
+2. [실행중인 스크립트가 있는 디렉토리]에서 찾음
+
+파일 이름이 ./이나 ../로 시작하면, 현재 작업 디렉토리 안에서만 찾는다.
+
+* Class & Object
+
+- visibility(public, private, protected)
+- abstract, interface, final(override 불가), static
+- clone, serialize/deserialize, typehinting
+- iteration(Iterator, IteratorAggregate)
+- 객체에 foreach 구문 사용: 객체의 접근 가능한 프로퍼티 순회    
+.link http://192.168.59.103/class.php
+- traits
+.link http://192.168.59.103/traits.php
+- magic method
+  __construct(), __destruct(),
+  __call(), __callStatic(), __get(), __set(), __isset(), __unset(),
+  __sleep(), __wakeup(), __clone(),
+  __toString(), __invoke(), __set_state(), __debugInfo() 
+

@@ -1,0 +1,310 @@
+Zend Framework
+12 Jun 2015
+
+장재휴
+purpleworks
+
+* Zend Framework
+
+- 공식싸이트
+.link http://framework.zend.com/
+.link http://framework.zend.com/manual/1.12/en/manual.html
+
+
+ZF1, ZF2 2개 버전이 있음
+마젠토 1.9.x 에서 사용하는 버전은 ZF1
+
+  magento 1.9.1.1
+  zendframework 1.12.7
+
+* zf tool
+
+  $ zf ? version
+  Zend Framework Command Line Console Tool v1.12.7
+  Actions supported by provider "Version"
+    Version
+      zf show version mode[=mini] name-included[=1]
+      Note: There are specialties, use zf show version.? to get specific help on them.
+
+  $ zf create project quickstart
+
+  $ zf enable layout
+
+  $ zf configure db-adapter ...
+
+  $ zf create db-table Guestbook guestbook
+
+  $ zf create model GuestbookMapper
+
+  $ zf create model Guestbook
+
+  $ zf create controller Guestbook
+
+# gco 31a10cb12e050ffe2c5ca0d27c87b5711221f702
+
+* 디렉토리 구조
+
+  |-- application
+  |   |-- Bootstrap.php
+  |   |-- configs
+  |   |   `-- application.ini
+  |   |-- controllers
+  |   |   |-- ErrorController.php
+  |   |   `-- IndexController.php
+  |   |-- models
+  |   `-- views
+  |       |-- helpers
+  |       `-- scripts
+  |           |-- error
+  |           |   `-- error.phtml
+  |           `-- index
+  |               `-- index.phtml
+  |-- library
+  |-- public
+  |   |-- .htaccess
+  |   `-- index.php
+  `-- tests
+      |-- application
+      |   `-- bootstrap.php
+      |-- library
+      |   `-- bootstrap.php
+      `-- phpunit.xml
+
+* autoloader
+
+PHP5 부터 등장한 __autoload() 기능 사용
+(__autoload() 함수를 정의하면 클래스/인터페이스가 정의되지 않은 경우 자동으로 호출됨)
+
+- autoloader가 동작하기 위한 조건
+  클래스:파일 => 1:1
+  클래스 이름 => 디렉토리를 전체를 _를 구분자로 하여 클래스 이름에 포함시킴
+- Convention & Design
+  - namespace matching
+    class 이름의 namespace 부분이 등록되어 있지 않다면 바로 FALSE
+  - act as a fallback autoloader
+    fallback 방식을 권장하진 않음
+  - Allow toggling error suppression
+    성능에 안좋다.  default는 off
+  - Allow specifying custom callbacks for autoloading.
+    autoload 방식을 제어할 수 있음
+  - Allow manipulation of the SPL autoload callback chain
+
+* Controller
+
+# .link http://framework.zend.com/manual/1.12/en/zend.controller.basics.html
+
+- Zend_Controller_Front
+모든 request 처리. Zend_Controller_Dispatcher를 거쳐 Zend_Controller_Action으로 전달.
+
+- Zend_Controller_Request_Abstract
+Request의 각종 정보를 담고 있음. Zend_Controller_Request_Http를 디폴트로 사용.
+
+- Zend_Controller_Router_Interface
+라우터 정의. Zend_Controller_Dispatcher_Standard를 디폴트로 사용.
+
+- Zend_Controller_Dispatcher_Interface
+url 해석 후 controller/action으로 전달. Zend_Controller_Dispatcher_Standard를 디폴트로
+
+- Zend_Controller_Action
+컨트롤러 액션 클래스의 parent. Zend_Controller_Action를 상속받아 컨트롤러 구현
+
+- Zend_Controller_Response_Abstract
+Request 정보. Zend_Controller_Response_Http를 디폴트로 사용.
+
+* Request Object
+
+- 파라미터 관련 메쏘드
+  getParams(), setParams(), getParam(), setParam(), getUserParam(), setParamSources()
+  getHeader(), getRawBody(), getQuery(), getPost('user') // $_GET, $_POST['user']
+- HTTP METHOD 확인
+  isGet(), isPost(), isPut(), isDelete(), isHead(), isOptions()
+- AJAX 확인
+  isXmlHttpRequest()
+
+* Response Object
+
+- 헤더 처리 메쏘드
+
+  canSendHeaders(), setHeader($name, $value, $replace = false), setRedirect($url, $code = 302), 
+  getHeaders(), clearHeaders(), setRawHeader(), getRawHeaders(), 
+  clearRawHeaders(), clearAllHeaders()
+
+- 쿠키 처리는 Zend_Http_Header_SetCookie 클래스 통해서...
+  $this->getResponse()->setRawHeader(new Zend_Http_Header_SetCookie(
+    'foo', 'bar', NULL, '/', 'example.com', false, true
+  ));
+
+  $cookie = new Zend_Http_Header_SetCookie();
+  $cookie->setName('foo')
+         ->setValue('bar')
+         ->setDomain('example.com')
+         ->setPath('/')
+         ->setHttponly(true);
+  $this->getResponse()->setRawHeader($cookie);
+
+* 컨트롤러 내부
+
+- Action Controller
+.link http://framework.zend.com/manual/1.12/en/zend.controller.action.html
+- Router
+.link http://framework.zend.com/manual/1.12/en/zend.controller.router.html
+- Dispatcher
+.link http://framework.zend.com/manual/1.12/en/zend.controller.dispatcher.html
+- Action Helper
+.link http://framework.zend.com/manual/1.12/en/zend.controller.actionhelpers.html
+
+* Action Helper
+
+컨트롤러에서 액션 처리시 사용하는 공통적인 기능들
+
+- ActionStack: 여러 액션을 수행할 때 
+- AutoComplete
+- ContextSwitch and AjaxContext: request와 다른 response format을 리턴할때 
+- FlashMessenger
+- JSON
+- Redirector
+- ViewRenderer
+
+Writing Your Own Helpers
+
+.link http://framework.zend.com/manual/1.12/en/zend.controller.actionhelpers.html
+
+* Plugin
+
+컨트롤러 처리 중 특정 상황이 발생했을때 처리하는 로직.
+
+- Zend_Controller_Plugin_Abstract 클래스에 정의된 메쏘드
+    routeStartup(), routeShutdown(), dispatchLoopStartup(), dispatchLoopShutdown(), 
+    preDispatch(), postDispatch()
+
+내장 플러그인들...
+
+- ActionStack
+- Zend_Controller_Plugin_ErrorHandler
+- Zend_Controller_Plugin_PutHandler
+
+* Plugin
+
+관련된 플러그인들은 공통의 prefix 사용. 등록은 플러그인 이름으로...
+
+  class name: Foo_View_Helper_Bar
+  prefix: Foo_View_Helper_  
+  플러그인 이름: Bar
+
+LIFO 방식으로 동작 - 마지막에 등록된 플러그인부터 실행. 
+
+
+  foo/
+  |-- plugins/
+  |   |-- validators/
+  |   |   |-- Even.php
+  |   |   |-- Dozens.php
+
+  $element->addPrefixPath('Foo_Validate', 'foo/plugins/validators/', 'validate');
+  $element->addValidator('NotEmpty')
+          ->addValidator('Int')
+          ->addValidator('Even')
+          ->addValidator('Dozens');
+
+
+이전에 등록한 플러그인을 덮어써버릴 수 있음
+
+* Modular
+
+- 디렉토리 구성
+  application/
+      modules/
+          default/
+              controllers/
+          foo/
+              controllers/
+          bar/
+              controllers/
+- 라우팅
+  module/:controller/:action/*
+  :controller/:action/*
+
+* Layout
+
+- Two Step View + Composite View
+
+.link http://martinfowler.com/eaaCatalog/twoStepView.html
+
+여러 종류의 논리적인 페이지를 구성, then 논리적인 페이지를 html로 렌더링
+application view를 먼저 생성한 후, page view를 inject함 (템플릿, common element, 등)
+Zend Framework에서는 Two Step View 패턴과 Composite View 패턴을 혼합해서 사용
+
+
+- 레이아웃 지정 ("application/configs/application.ini" 파일)
+  resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/" (레이아웃 위치)
+  resources.layout.layout = "layout"                                 (레이아웃 파일 - .phtml 생략)
+- view script ("application/layouts/scripts/layout.phtml")
+  <?php echo $this->layout()->content ?>
+  // layout(): layout helper를 호출
+- 컨트롤러에서 view를 지정하면 place holder에 담겨서 렌더링 됨
+
+* 데이터 처리
+
+- Table Data Gateway 패턴 사용
+# .link http://martinfowler.com/eaaCatalog/tableDataGateway.html
+
+  class Application_Model_DbTable_Guestbook extends Zend_Db_Table_Abstract
+  {
+      protected $_name    = 'guestbook';      /** Table name */
+  }
+
+  class Application_Model_GuestbookMapper
+  {
+      public function save(Application_Model_Guestbook $guestbook);
+      public function find($id);
+      public function fetchAll();
+  }
+
+  class Application_Model_Guestbook
+  {
+      protected $_comment;
+      protected $_created;
+      protected $_email;
+      protected $_id;
+   
+      public function __set($name, $value);
+      public function __get($name);
+   
+      public function setComment($text);
+      public function getComment();
+   
+      public function setEmail($email);
+      public function getEmail();
+   
+      public function setCreated($ts);
+      public function getCreated();
+   
+      public function setId($id);
+      public function getId();
+  }
+
+* Zend_Acl
+
+ACL: Access Control List (접근 제어 목록)
+특정 resource에 각 role 별로 접근 제어 수준 설정
+
+
+- resource 정의: Zend_Acl_Resource_Interface를 구현
+  interface Zend_Acl_Resource_Interface
+  {
+      public function getResourceId();
+  }
+
+- role 정의: Zend_Acl_Role_Interface를 구현
+  interface Zend_Acl_Role_Interface
+  {
+      public function getRoleId();
+  }
+
+.link http://framework.zend.com/manual/1.12/en/learning.multiuser.authorization.html
+
+* 기타
+
+.link http://framework.zend.com/manual/1.12/en/reference.html
+
+.play run.php
