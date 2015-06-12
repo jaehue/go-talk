@@ -306,5 +306,3 @@ ACL: Access Control List (접근 제어 목록)
 * 기타
 
 .link http://framework.zend.com/manual/1.12/en/reference.html
-
-.play run.php

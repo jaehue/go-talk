@@ -26,7 +26,29 @@ purpleworks
 - Resource(resource)
 - NULL(NULL)
 
-.link http://192.168.59.103/string.php
+* Data Types Examples - array
+
+.play samples/array1.php /START OMIT/,/END OMIT/
+.play samples/array2.php /START OMIT/,/END OMIT/
+.play samples/array3.php /START OMIT/,/END OMIT/
+.play samples/array4.php /START OMIT/,/END OMIT/
+
+* Data Types Examples - array
+
+.play samples/array5.php /START OMIT/,/END OMIT/
+.play samples/array6.php /START OMIT/,/END OMIT/
+
+* Data Types Examples - string
+
+.play samples/string1.php /START OMIT/,/END OMIT/
+
+* Data Types Examples - string
+
+.play samples/string2.php /START OMIT/,/END OMIT/
+
+* Data Types Examples - string
+
+.play samples/string3.php /START OMIT/,/END OMIT/
 
 * Variables
 
@@ -74,23 +96,11 @@ Accessing data from a simple POST HTML form
 * Variable Variables
 
 변수의 이름을 동적으로 바꿀 경우 사용.
-
-  <?php
-  $a = 'hello';
-  $$a = 'world';
-  echo "$a ${$a}" . "<br>";
-  echo "$a $hello";
-
-  $a = "foo";
-  $foo = "bar";
-  echo $$a;
-  ?>
   
-.link http://192.168.59.103/var.php
+.play samples/var.php
 
 * Type Casting 1
 
-- 규칙
   (int), (integer) - cast to integer
   (bool), (boolean) - cast to boolean
   (float), (double), (real) - cast to float
@@ -98,17 +108,8 @@ Accessing data from a simple POST HTML form
   (array) - cast to array
   (object) - cast to object
   (unset) - cast to NULL (PHP 5)
-- 예제
-  <?php
-  $foo = 10;   // $foo is an integer
-  $bar = (boolean) $foo;   // $bar is a boolean
 
-  $foo = 10;            // $foo is an integer
-  $str = "$foo";        // $str is a string
-  $fst = (string) $foo; // $fst is also a string
-  ?>
-
-.link http://192.168.59.103/casting.php
+.play samples/casting.php
 
 * Type Casting 2
 
@@ -214,12 +215,17 @@ defined() 함수 : 상수가 존재하는지 여부를 결정한다.
 - clone, serialize/deserialize, typehinting
 - iteration(Iterator, IteratorAggregate)
 - 객체에 foreach 구문 사용: 객체의 접근 가능한 프로퍼티 순회    
-.link http://192.168.59.103/class.php
 - traits
-.link http://192.168.59.103/traits.php
 - magic method
   __construct(), __destruct(),
   __call(), __callStatic(), __get(), __set(), __isset(), __unset(),
   __sleep(), __wakeup(), __clone(),
   __toString(), __invoke(), __set_state(), __debugInfo() 
 
+* iteration Examples
+
+.play samples/class.php
+
+* traits Examples
+
+.play samples/traits.php
