@@ -243,6 +243,61 @@ Zend Framework에서는 Two Step View 패턴과 Composite View 패턴을 혼합�
   // layout(): layout helper를 호출
 - 컨트롤러에서 view를 지정하면 place holder에 담겨서 렌더링 됨
 
+* View
+
+- Controller Script
+controller 액션 메쏘드에서 $this->view 로 Zend_View 객체를 얻어옴.
+Zend_View의 render() 메쏘드를 통해 view script를 호출.
+
+- View script
+$this를 통해 Zend_View 객체에 접근
+
+* View Methods
+
+- Options
+  encoding: setEncoding()
+  escape: escape(), setEscape() // avoid cross-site scripting attacks
+  filter: setFilter(), addFilter()
+  stricVars: strictVars(true)
+- Utility Accessors
+  getVars()
+  clearVars()
+  getScriptPath($script)
+  getScriptPaths()
+  getHelperPath($helper)
+  getHelperPaths()
+  getFilterPath($filter)
+  getFilterPaths()
+
+* View Helpers
+
+- Initial Helper methods
+  declareVars()                                   formHidden($name, $value, $attribs)
+  fieldset($name, $content, $attribs)             formImage($name, $value, $attribs)                      
+  form($name, $attribs, $content)                 formLabel($name, $value, $attribs)                  
+  formButton($name, $value, $attribs)             formSubmit($name, $value, $attribs)                      
+  formCheckbox($name, $value, $attribs, $options) formText($name, $value, $attribs)                                  
+  formErrors($errors, $options)                   formTextarea($name, $value, $attribs)                
+  formFile($name, $attribs)                       url($urlOptions, $name, $reset, $encode)            
+  formMultiCheckbox($name, $value, $attribs, $options, $listsep)
+
+- Built-in Helpers
+
+  - HeadStyle Helper      - HeadTitle Helper              
+  - Action View Helper    - HTML Object Helpers       
+  - BaseUrl Helper        - InlineScript Helper       
+  - Currency Helper       - RenderToPlaceholder Helper
+  - Cycle Helper          - JSON Helper               
+  - Partial Helper        - Navigation Helpers        
+  - Placeholder Helper    - Breadcrumbs Helper        
+  - Doctype Helper        - Links Helper              
+  - Gravatar View Helper  - Sitemap Helper            
+  - HeadLink Helper       - Translate Helper          
+  - HeadMeta Helper       - UserAgent View Helper     
+  - HeadScript Helper     - etc.
+
+.link http://framework.zend.com/manual/1.12/en/zend.view.helpers.html
+
 * 데이터 처리
 
 - Table Data Gateway 패턴 사용
