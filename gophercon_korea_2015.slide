@@ -11,11 +11,13 @@ jaehue@jang.io
 - Elandsystems ➜ purpleworks
 - Ruby, C#, Go, etc.
 
-* Resiliency: The Process
+* Resiliency
 
-* Careful Coding: Error Handling & Clean-up
+* 1. Careful Coding
 
-* Handle All Errors
+* 1. Careful Coding: #Error Handling & Clean-up
+
+* First Example
 
         resourceA, err := OpenResourceA()
         if err != nil {
@@ -25,16 +27,6 @@ jaehue@jang.io
 
 * What About nil?
 
-* Back To Our Example:
-
-        resourceA, err := OpenResourceA()
-        if err != nil {
-                return nil, err
-        }
-        defer resourceA.Close()
-
-        // ...
-
 * Be Careful!
 
         // can return nil, and that's not an error!
@@ -43,8 +35,6 @@ jaehue@jang.io
                 return nil, err
         }
         defer resourceA.Close()     // panic on nil????
-
-* Not Necessarily.
 
 * One Solution:
 
@@ -58,8 +48,6 @@ jaehue@jang.io
                         resourceA.Close()
                 }
         }()
-
-* Gross.
 
 * Make deferred Methods nil-Safe
 
@@ -79,7 +67,7 @@ jaehue@jang.io
         }
         defer resourceA.Close()     // will never panic!
 
-* Careful Coding: Channels
+* 1. Careful Coding: #Channels
 
 * Channel Axioms
 
@@ -90,16 +78,21 @@ jaehue@jang.io
 
 http://dave.cheney.net/2014/03/19/channel-axioms
 
-* ￼Careful Coding: Panics!
+* 1.￼Careful Coding: #Panics
+
+* Panicking Code
+
+.play gophercon-korea-2015/panic.go /START OMIT/,/END OMIT/
 
 * You Can Recover From Panics
 
-- ... but you shouldn't always do so!
-- Only recover if you're sure it's okay
-- Panic recovery is for current goroutine
-- At very least, log the stack trace
+.play gophercon-korea-2015/recover.go /START OMIT/,/END OMIT/
 
-* ￼Careful Coding: Avoid Race Conditions!
+* Recovering Block
+
+.play gophercon-korea-2015/recover2.go /START OMIT/,/END OMIT/
+
+* 1. ￼Careful Coding: #Avoid Race Conditions!
 
 * Go's Race Detector:
 
@@ -107,23 +100,39 @@ http://dave.cheney.net/2014/03/19/channel-axioms
 - Crashes with a full stack trace, including the read and write goroutines
 - Should be used in unit tests, development, and testing environments
 
+* Race Condition Code
+
+.play gophercon-korea-2015/race.go /START OMIT/,/END OMIT/
+
+# [shift] key + "Run"
+
 * Race Detector Output:
 
 
-    ==================
-    WARNING: DATA RACE
-    Read by goroutine 5:
-      main.func·001()
-         race.go:14 +0x169
-    Previous write by goroutine 1:
-      main.main()
-          race.go:15 +0x174
-    Goroutine 5 (running) created at:
-      time.goFunc()
-          src/pkg/time/sleep.go:122 +0x56
-      timerproc()
-         src/pkg/runtime/ztime_linux_amd64.c:181 +0x189
-    ==================
+        $ go run -race race.go
+
+        ==================
+        WARNING: DATA RACE
+        Write by goroutine 5:
+          runtime.mapassign1()
+              /usr/local/go/src/runtime/hashmap.go:383 +0x0
+          main.func·001()
+              /go/src/github.com/jaehue/go-talk/gophercon-korea-2015/race.go:10 +0xa3
+
+        Previous write by main goroutine:
+          runtime.mapassign1()
+              /usr/local/go/src/runtime/hashmap.go:383 +0x0
+          main.main()
+              /go/src/github.com/jaehue/go-talk/gophercon-korea-2015/race.go:13 +0x22e
+
+        Goroutine 5 (running) created at:
+          main.main()
+              /go/src/github.com/jaehue/go-talk/gophercon-korea-2015/race.go:12 +0x1ac
+        ==================
+        2 b
+        1 a
+        Found 1 data race(s)
+        exit status 66
 
 * Enable Race Detection:
 
@@ -132,7 +141,7 @@ http://dave.cheney.net/2014/03/19/channel-axioms
         $ go build -race mycmd   // to build the command
         $ go install -race mypkg // to install the package
 
-* Careful Coding: Implement Timeouts
+* 1. Careful Coding: #Implement Timeouts
 
 * Network Timeouts:
 
@@ -142,13 +151,16 @@ http://dave.cheney.net/2014/03/19/channel-axioms
 
 * ￼TEST ALL THE THINGS!
 ￼
-* Know Your Service
 
-* Know Your Service: How Does It Use Memory?
+* 2. Know Your Service
 
-* Profile It!
+* 2. Know Your Service: #How Does It Use Memory?
+
+* Profile It! (https://github.com/wblakecaldwell/profiler)
 
 .image https://github.com/wblakecaldwell/2015-GopherCon-Talk/raw/master/profiler-screenshot.png 500 _
+
+.link http://simplechat.jang.io/profiler/info.html
 
 * What to Watch
 
@@ -158,9 +170,9 @@ http://dave.cheney.net/2014/03/19/channel-axioms
 - What's the garbage collector doing? GODEBUG=gctrace=1
 - Where is memory allocated? (PPROF)
 
-* Know Your Service: PPROF
+* 2. Know Your Service: #PPROF
 
-* PPROF Inspects Your Running Process
+* "PPROF" Inspects Your Running Process
 
 - Blocking profile
 - Goroutine count and full stacktraces
@@ -181,10 +193,13 @@ http://dave.cheney.net/2014/03/19/channel-axioms
 
 * PPROF Main Page
 
+.link http://simplechat.jang.io/debug/pprof
+
 .image gophercon-korea-2015/pprof.png 500 _
 
 
-* Don't leak goroutines!
+# Don't leak goroutines!
+
 
 * Use PPROF To Tell You:
 
@@ -198,39 +213,58 @@ http://dave.cheney.net/2014/03/19/channel-axioms
 
 * PPROF: From the Command Line
 
-* What Are Your GoRoutines Doing?
+What Are Your GoRoutines Doing?
 
-        $ go tool pprof ./server http://localhost:6060/debug/pprof/goroutine
+        $ go tool pprof ./simple-chat http://simplechat.jang.io/debug/pprof/goroutine
 
-        (pprof) top5
+        Fetching profile from http://simplechat.jang.io/debug/pprof/goroutine
+        Saved profile in /Users/jaehuejang/pprof/pprof.simple-chat.simplechat.jang.io.goroutine.002.pb.gz
+        Entering interactive mode (type "help" for commands)
 
-        11 of 11 total (  100%)
-        Showing top 5 nodes out of 49 (cum >= 1)
-                flat  flat%   sum%
-                 9 81.82% 81.82%
-                 1  9.09% 90.91%
-                 1  9.09%   100%
-                 0     0%   100%
-                 0     0%   100%
-
+        (pprof) top 10
+        9 of 9 total (  100%)
+        Showing top 10 nodes out of 34 (cum >= 1)
+              flat  flat%   sum%        cum   cum%
+                 7 77.78% 77.78%          7 77.78%  runtime.gopark
+                 1 11.11% 88.89%          1 11.11%  runtime.notetsleepg
+                 1 11.11%   100%          1 11.11%  runtime/pprof.writeRuntimeProfile
+                 0     0%   100%          1 11.11%  github.com/wblakecaldwell/profiler.func·001
+                 0     0%   100%          1 11.11%  github.com/wblakecaldwell/profiler.func·002
+                 0     0%   100%          1 11.11%  github.com/wblakecaldwell/profiler.func·003
+                 0     0%   100%          1 11.11%  main.main
+                 0     0%   100%          1 11.11%  net.(*TCPListener).AcceptTCP
+                 0     0%   100%          1 11.11%  net.(*netFD).accept
+                 0     0%   100%          1 11.11%  net.(*pollDesc).Wait
         (pprof) web
+
+* PPROF: From the Command Line - Visualizer
+
+.image gophercon-korea-2015/goroutine-svg.png 600 _
 
 * Who's Allocating Heap Memory?
 
+        $ go tool pprof ./simple-chat http://simplechat.jang.io/debug/pprof/heap
 
-    $ go tool pprof ./server http://localhost:6060/debug/pprof/heap
-    (pprof) top5
-    2362.41kB of 2362.41kB total (  100%)
-    Dropped 28 nodes (cum <= 11.81kB)
-          flat  flat%   sum%        cum   cum%
-     1850.27kB 78.32% 78.32%  1850.27kB 78.32%  github.com/wblakecaldwell/profiler.func·002
-      512.14kB 21.68%   100%   512.14kB 21.68%  mcommoninit
-             0     0%   100%  1850.27kB 78.32%  runtime.goexit
-             0     0%   100%   512.14kB 21.68%  runtime.rt0_go
-             0     0%   100%   512.14kB 21.68%  runtime.schedinit
-    (pprof) web
+        Fetching profile from http://simplechat.jang.io/debug/pprof/heap
+        Saved profile in /Users/jaehuejang/pprof/pprof.simple-chat.simplechat.jang.io.inuse_objects.inuse_space.002.pb.gz
+        Entering interactive mode (type "help" for commands)
 
-* Know Your Service: Watch It Run
+        (pprof) top 5
+        1537.45kB of 1537.45kB total (  100%)
+        Dropped 3 nodes (cum <= 7.69kB)
+              flat  flat%   sum%        cum   cum%
+          512.75kB 33.35% 33.35%   512.75kB 33.35%  encoding/gob.encComplex64Array
+          512.56kB 33.34% 66.69%  1537.45kB   100%  [simple-chat]
+          512.14kB 33.31%   100%   512.14kB 33.31%  encoding/gob.(*Decoder).typeString
+                 0     0%   100%  1025.31kB 66.69%  encoding/gob.buildTypeInfo
+                 0     0%   100%   512.14kB 33.31%  encoding/gob.newTypeObject
+        (pprof) web
+
+* Who's Allocating Heap Memory? - Visualizer
+
+.image gophercon-korea-2015/heap-svg.png 550 _
+
+* 2. Know Your Service: #Watch It Run
 
 * /info Endpoint
 
@@ -240,6 +274,8 @@ http://dave.cheney.net/2014/03/19/channel-axioms
                 CurrentTimeEpocSecs: 143117131,
                 Uptime: "167h10m2s"
         }
+
+.link http://simplechat.jang.io/info
 
 * Managing Service Version
 
@@ -261,69 +297,30 @@ In code:
 Build script:
 
         $ go build -ldflags \
-            "-X main.ServiceVersion \
-                1.0.275-b244a2b9b8-20150202.163449" \kilnproxy
+        >       "-X main.ServiceVersion 1.0.231.fd80bea-20150814.160801"
+
+* 2. Know Your Service: #Keep Good Logs!
 
 * Keep Good Logs!
 - Create a semi-unique string per request
 - Use this request string as a prefix in all log entries
 - Always log at least the start and end of a request
 
+* 2. Know Your Service: #Connection Status
+
 * Who's Currently Connected?
 
-* ￼/connections Endpoint
+￼/connections Endpoint
 
-    {
-        "CurrentUserCount":1,
-        "CurrentlyAuthenticatedUsers":
-        [
-            {"Account":"aviato",
-            "Name":"Erlich Bachman",
-            "PublicKeyName":"Build Server",
-            "SessionKey":"106abc0c",
-            "SessionDuration":"25m4s"
+        {
+          CurrentUserCount: 1,
+          CurrentlyAuthenticatedUsers: [
+            {
+              Addr: "10.157.118.9:46493",
+              Name: "장재휴",
+              SessionDuration: "3m4s"
             }
-        ]
-    }
+          ]
+        }
 
-* Drain and Die
-
-* ￼Game Day.
-
-* ￼KilnProxy Using 40MB more memory than normal!!!
-
-* ￼Profiler Tells Me: This memory is still in use
-
-* ￼/connections Tells Me: Initech is connected 10 times
-
-    {
-        "CurrentUserCount":25,
-        "CurrentlyAuthenticatedUsers":
-        [
-            {"Account":"initech", "Name":"Peter Gibbons", ...
-            {"Account":"initech", "Name":"Peter Gibbons", ...
-            {"Account":"initech", "Name":"Peter Gibbons", ...
-            {"Account":"initech", "Name":"Peter Gibbons", ...
-            {"Account":"initech", "Name":"Peter Gibbons", ...
-            ...
-        ]
-    }
-
-* ￼Dev Profiling Told Me:
-Each connection uses 4MB of memory
-
-* ￼Dev PPROF Told Me:
-Most of that 4MB is SSH internals
-
-* ￼Wolfram Alpha Tells Me: 4MB x 10 = 40MB
-
-* ￼We Contact Initech.
-
-* Timeouts Make Sure That: Their connections will be closed
-
-* ￼Prod Profiling Told Me: This memory will be reclaimed
-
-* ￼So....
-
-* ￼Uptime: Preserved.
-￼
+* Conclusion
